@@ -51,7 +51,7 @@ func GetTodosHandler(db *sql.DB) http.HandlerFunc {
 		}
 		defer rows.Close()
 
-		var todos []todo.Todo
+		var todos []todo.Todo = []todo.Todo{}
 		for rows.Next() {
 			var t todo.Todo
 			if err := rows.Scan(&t.ID, &t.Title, &t.Description, &t.Completed); err != nil {
