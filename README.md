@@ -54,3 +54,20 @@ gcloud auth configure-docker
 docker build -t gcr.io/[YOUR_PROJECT_ID]/myapp:v1 .
 docker push gcr.io/[YOUR_PROJECT_ID]/myapp:v1
 ```
+
+### Run on AWS
+
+```
+# build docker
+docker build -t myapp . 
+
+# tag & push docker
+docker tag myapp:latest your-aws-account-id.dkr.ecr.your-region.amazonaws.com/myapp:latest
+# 替換掉 `your-aws-account-id` 與 `your-region`
+```
+
+```
+# Test RDS DB with local server
+export DATABASE_URL="postgres://postgres:Abcd1234@database-3.cluster-cdqgyymqumh0.ap-southeast-2.rds.amazonaws.com:5432/golangtodo"
+go run .
+```
