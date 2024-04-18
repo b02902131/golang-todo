@@ -27,11 +27,18 @@
 ### Run local
 
 ```
+export DATABASE_URL="postgres://golangtodo:golangtodo@localhost:5432/golangtodo?sslmode=disable" 
+go run .
+```
+
+```
 # build docker
 docker build -t myapp .
 
 # run docker
-docker run -p 4000:8080 -e DB_PATH=/app/todo-backend/todo.db -v /Users/bigyo/Documents/project/golang-todo/todo-backend/todo.db:/app/todo-backend/todo.db myapp
+docker run -p 8080:8080 -e DATABASE_URL="postgres://golangtodo:golangtodo@host.docker.internal:5432/golangtodo?sslmode=disable" myapp
+
+# 用 host.docker.internal 代替 localhost Docker 才能指向宿主機
 ```
 
 ### Run on GCP(GKE)

@@ -10,14 +10,18 @@ import (
 
 // initDB initializes the database and returns a database handle
 func InitDB() *sql.DB {
+	log.Println("Initializing database...")
+
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("DATABASE_URL is not set.")
+	} else {
+		log.Printf("Connecting to database at: %s", dbURL)
 	}
 
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error opening database: %s", err)
 	}
 
 	createTableSQL := `CREATE TABLE IF NOT EXISTS todos (
