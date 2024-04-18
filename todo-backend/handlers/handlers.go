@@ -18,19 +18,13 @@ func CreateTodoHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		result, err := db.Exec("INSERT INTO todos (title, description, completed) VALUES (?, ?, ?)", newTodo.Title, newTodo.Description, newTodo.Completed)
+		// 使用 RETURNING 子句获取新插入行的 ID
+		sqlStatement := `INSERT INTO todos (title, description, completed) VALUES ($1, $2, $3) RETURNING id`
+		err := db.QueryRow(sqlStatement, newTodo.Title, newTodo.Description, newTodo.Completed).Scan(&newTodo.ID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		id, err := result.LastInsertId()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		newTodo.ID = int(id)
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(newTodo)
@@ -81,7 +75,7 @@ func UpdateTodoHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		_, err := db.Exec("UPDATE todos SET title = ?, description = ?, completed = ? WHERE id = ?", todo.Title, todo.Description, todo.Completed, id)
+		_, err := db.Exec("UPDATE todos SET title = $1, description = $2, completed = $3 WHERE id = $4", todo.Title, todo.Description, todo.Completed, id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -102,7 +96,7 @@ func DeleteTodoHandler(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["id"]
 
-		_, err := db.Exec("DELETE FROM todos WHERE id = ?", id)
+		_, err := db.Exec("DELETE FROM todos WHERE id = $1", id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

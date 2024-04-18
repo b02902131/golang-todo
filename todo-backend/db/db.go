@@ -5,25 +5,26 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
 // initDB initializes the database and returns a database handle
 func InitDB() *sql.DB {
-	dbPath := os.Getenv("DB_PATH")
-	if dbPath == "" {
-		dbPath = "./todo.db"
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL is not set.")
 	}
-	db, err := sql.Open("sqlite3", dbPath)
+
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	createTableSQL := `CREATE TABLE IF NOT EXISTS todos (
-		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
-		"title" TEXT,
-		"description" TEXT,
-		"completed" BOOLEAN
+		id SERIAL PRIMARY KEY,
+		title TEXT,
+		description TEXT,
+		completed BOOLEAN
 	);`
 
 	_, err = db.Exec(createTableSQL)
