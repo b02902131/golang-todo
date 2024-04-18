@@ -18,11 +18,19 @@ func CreateTodoHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		_, err := db.Exec("INSERT INTO todos (title, description, completed) VALUES (?, ?, ?)", newTodo.Title, newTodo.Description, newTodo.Completed)
+		result, err := db.Exec("INSERT INTO todos (title, description, completed) VALUES (?, ?, ?)", newTodo.Title, newTodo.Description, newTodo.Completed)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		id, err := result.LastInsertId()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		newTodo.ID = int(id)
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(newTodo)
@@ -80,6 +88,7 @@ func UpdateTodoHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(todo)
 	}
 }
 

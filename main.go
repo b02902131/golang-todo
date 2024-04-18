@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"golang-todo/config"
 	"golang-todo/db"
 )
 
@@ -14,6 +15,6 @@ func main() {
 	router := NewRouter(db)
 
 	log.Println("Server is running on http://localhost:8080")
-	http.ListenAndServe(":8080", router)
-
+	http.Handle("/", config.SetupCORS()(router))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
