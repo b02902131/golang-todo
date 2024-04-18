@@ -3,13 +3,18 @@ package db
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 // initDB initializes the database and returns a database handle
 func InitDB() *sql.DB {
-	db, err := sql.Open("sqlite3", "./todo.db")
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "./todo.db"
+	}
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
