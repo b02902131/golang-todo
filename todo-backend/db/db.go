@@ -34,11 +34,10 @@ func InitDB() *sql.DB {
 	);`
 
 	log.Println("Creating todos table...")
-	_, err = db.Exec(createTableSQL)
-	if err != nil {
+	if _, err = db.Exec(createTableSQL); err != nil {
 		log.Fatalf("Error creating todos table: %s", err)
 	} else {
-		log.Println("Created todos table")
+		log.Println("Successfully created todos table.")
 	}
 
 	return db
