@@ -10,6 +10,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func HelloWorld(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello, World!"))
+}
+
 func CreateTodoHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var newTodo todo.Todo
