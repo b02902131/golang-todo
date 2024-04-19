@@ -22,6 +22,8 @@ func InitDB() *sql.DB {
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatalf("Error opening database: %s", err)
+	} else {
+		log.Printf("Connected to database: %s", dbURL)
 	}
 
 	createTableSQL := `CREATE TABLE IF NOT EXISTS todos (
