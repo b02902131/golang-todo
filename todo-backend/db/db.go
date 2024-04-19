@@ -36,6 +36,8 @@ func InitDB() *sql.DB {
 	_, err = db.Exec(createTableSQL)
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		log.Println("Created todos table")
 	}
 
 	return db
