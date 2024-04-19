@@ -33,9 +33,10 @@ func InitDB() *sql.DB {
 		completed BOOLEAN
 	);`
 
+	log.Println("Creating todos table...")
 	_, err = db.Exec(createTableSQL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error creating todos table: %s", err)
 	} else {
 		log.Println("Created todos table")
 	}
